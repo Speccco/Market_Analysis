@@ -24,79 +24,56 @@ data['ROAS'] = data['Revenue_Generated'] / data['Total_Spend']
 
 # KPI Summary
 st.header("Key Performance Indicators (KPIs)")
-kpis = {
-    'Total Impressions': data['Impressions'].sum(),
-    'Total Clicks': data['Clicks'].sum(),
-    'Total Conversions': data['Conversions'].sum(),
-    'Total Spend': data['Total_Spend'].sum(),
-    'Total Revenue': data['Revenue_Generated'].sum(),
-    'Average CTR': (data['Clicks'].sum() / data['Impressions'].sum()) * 100,
-    'Overall ROAS': data['Revenue_Generated'].sum() / data['Total_Spend'].sum()
-}
-st.write(kpis)
 
-# Ensure numeric columns for aggregation
-numeric_columns = ['Conversion_Rate', 'CPC', 'CPA', 'ROAS', 'Total_Spend', 'Revenue_Generated']
-data[numeric_columns] = data[numeric_columns].apply(pd.to_numeric, errors='coerce')
+# Create layout for KPIs using columns
+col1, col2, col3 = st.columns(3)
 
-# Create Tabs
-tabs = ['Overview', 'Channel Comparison', 'Trends', 'Spend Distribution', 'CTR and CPC', 'Correlations']
-selected_tab = st.selectbox("Select Tab", tabs)
+with col1:
+    st.subheader("Total Impressions")
+    st.markdown(f"<h3 style='text-align: center; color: #2a9d8f'>{data['Impressions'].sum():,}</h3>", unsafe_allow_html=True)
 
-if selected_tab == 'Overview':
-    st.header("Overview of Marketing Metrics")
-    st.write(kpis)
+with col2:
+    st.subheader("Total Clicks")
+    st.markdown(f"<h3 style='text-align: center; color: #2a9d8f'>{data['Clicks'].sum():,}</h3>", unsafe_allow_html=True)
 
-elif selected_tab == 'Channel Comparison':
-    st.header("Conversion Rate by Marketing Channel")
-    channel_metrics = data.groupby('Marketing_Channel')[numeric_columns].mean().reset_index()
+with col3:
+    st.subheader("Total Conversions")
+    st.markdown(f"<h3 style='text-align: center; color: #2a9d8f'>{data['Conversions'].sum():,}</h3>", unsafe_allow_html=True)
 
-    fig, ax = plt.subplots()
-    sns.barplot(data=channel_metrics, x='Marketing_Channel', y='Conversion_Rate', ax=ax)
-    st.pyplot(fig)
+# Next row of KPIs
+col4, col5, col6 = st.columns(3)
 
-elif selected_tab == 'Trends':
-    st.header("Monthly Trends in Campaign Performance")
-    data['End_Date'] = pd.to_datetime(data['End_Date'], errors='coerce')  # Ensure date column is datetime
-    data['Month_Year'] = data['End_Date'].dt.to_period("M").astype(str)
-    time_metrics = data.groupby('Month_Year').sum().reset_index()
+with col4:
+    st.subheader("Total Spend")
+    st.markdown(f"<h3 style='text-align: center; color: #264653'>${data['Total_Spend'].sum():,.2f}</h3>", unsafe_allow_html=True)
 
-    fig, ax = plt.subplots()
-    sns.lineplot(data=time_metrics, x='Month_Year', y='Impressions', label='Impressions', marker='o')
-    sns.lineplot(data=time_metrics, x='Month_Year', y='Clicks', label='Clicks', marker='o')
-    sns.lineplot(data=time_metrics, x='Month_Year', y='Conversions', label='Conversions', marker='o')
-    st.pyplot(fig)
+with col5:
+    st.subheader("Total Revenue")
+    st.markdown(f"<h3 style='text-align: center; color: #264653'>${data['Revenue_Generated'].sum():,.2f}</h3>", unsafe_allow_html=True)
 
-elif selected_tab == 'Spend Distribution':
-    st.header("Spend Distribution by Marketing Channel")
-    channel_metrics = data.groupby('Marketing_Channel')[['Total_Spend']].sum().reset_index()
+with col6:
+    st.subheader("Average CTR (%)")
+    avg_ctr = (data['Clicks'].sum() / data['Impressions'].sum()) * 100
+    st.markdown(f"<h3 style='text-align: center; color: #264653'>{avg_ctr:,.2f}%</h3>", unsafe_allow_html=True)
 
-    fig, ax = plt.subplots()
-    ax.pie(channel_metrics['Total_Spend'], labels=channel_metrics['Marketing_Channel'], autopct='%1.1f%%')
-    st.pyplot(fig)
+# Final row of KPIs
+col7, col8 = st.columns(2)
 
-elif selected_tab == 'CTR and CPC':
-    st.header("Click-Through Rate (CTR) and Cost per Click (CPC) by Marketing Channel")
-    # Calculate CTR
-    channel_metrics = data.groupby('Marketing_Channel')[['Clicks', 'Impressions', 'CPC']].sum().reset_index()
-    channel_metrics['CTR'] = (channel_metrics['Clicks'] / channel_metrics['Impressions']) * 100
+with col7:
+    st.subheader("Overall ROAS")
+    roas = data['Revenue_Generated'].sum() / data['Total_Spend'].sum()
+    st.markdown(f"<h3 style='text-align: center; color: #e9c46a'>{roas:,.2f}</h3>", unsafe_allow_html=True)
 
-    fig, ax = plt.subplots(1, 2, figsize=(14, 6))
+with col8:
+    st.subheader("Average CPC")
+    avg_cpc = data['Total_Spend'].sum() / data['Clicks'].sum()
+    st.markdown(f"<h3 style='text-align: center; color: #e9c46a'>${avg_cpc:,.2f}</h3>", unsafe_allow_html=True)
 
-    # CTR Plot
-    sns.barplot(data=channel_metrics, x='Marketing_Channel', y='CTR', ax=ax[0])
-    ax[0].set_title('CTR by Channel')
+# Make sure the rest of your code follows, e.g. visualizations and more
 
-    # CPC Plot
-    sns.barplot(data=channel_metrics, x='Marketing_Channel', y='CPC', ax=ax[1])
-    ax[1].set_title('CPC by Channel')
-
-    st.pyplot(fig)
-
-elif selected_tab == 'Correlations':
-    st.header("Correlations Between Metrics")
-    correlation_matrix = data[numeric_columns].corr()
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', ax=ax)
-    st.pyplot(fig)
+# Channel Metrics Visualization Example
+channel_metrics = data.groupby('Marketing_Channel')[['Conversion_Rate', 'Clicks', 'Impressions']].mean().reset_index()
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.barplot(data=channel_metrics, x='Marketing_Channel', y='Conversion_Rate', ax=ax)
+ax.set_title("Conversion Rate by Marketing Channel")
+st.pyplot(fig)
