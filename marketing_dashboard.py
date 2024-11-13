@@ -7,18 +7,13 @@ Original file is located at
     https://colab.research.google.com/drive/197ePsUvp_miI3HuHdNkuQXU5UYV2lv_p
 """
 
-pip install streamlit
-
-from google.colab import files
-files.upload()
-
 import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load the dataset
-data = pd.read_excel('nti.xlsx')
+data = pd.read_excel(r'C:\Users\TREIKA\Desktop\market_analysis\dataset.xlsx')
 
 # Streamlit header
 st.title("Marketing Campaign Analysis Dashboard")
