@@ -13,7 +13,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load the dataset
-data = pd.read_excel(r'C:\Users\TREIKA\Desktop\market_analysis\dataset.xlsx')
+data = pd.read_excel('dataset.xlsx')
 
 # Streamlit header
 st.title("Marketing Campaign Analysis Dashboard")
