@@ -100,7 +100,7 @@ elif tabs == 'CPC vs Conversion Rate':
 # Plot for ROAS by Marketing Channel
 elif tabs == 'ROAS by Channel':
     st.subheader("ROAS by Marketing Channel")
-    channel_metrics['ROAS'] = data.groupby('Marketing_Channel')['ROAS'].mean().reset_index()['ROAS']
+    channel_metrics = data.groupby('Marketing_Channel')[['ROAS', 'Total_Spend']].mean().reset_index()  # Corrected calculation
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.barplot(data=channel_metrics, x='Marketing_Channel', y='ROAS', ax=ax, palette='viridis')
     ax.set_title("ROAS by Marketing Channel", fontsize=16)
