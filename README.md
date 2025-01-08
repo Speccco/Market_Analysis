@@ -8,6 +8,10 @@ This project is a marketing campaign analysis dashboard built using Python, Stre
 - Breakdown of performance by **marketing channels**.
 - View **monthly trends** in campaign performance.
 - Interactive **data visualizations** (bar charts, line plots, pie charts).
+  
+## Try the Demo Right Now!
+
+https://marketanalysis-lvz2yfb6xnjdevrdmwen5c.streamlit.app/
 
 ## Getting Started
 
